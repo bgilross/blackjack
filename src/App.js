@@ -1,10 +1,10 @@
 import './App.css'
-import MainPage from './MainPage'
+import Game from './Game'
 
 function App() {
   return (
     <div className="App">
-      <MainPage />
+      <Game />
     </div>
   )
 }

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import uniqid from 'uniqid'
 
-const MainPage = () => {
+const Game = () => {
   const [decks, setDecks] = useState([])
   const [currentCard, setCurrentCard] = useState(null)
   const [deckNumber, setDeckNumber] = useState(0)
@@ -19,19 +19,47 @@ const MainPage = () => {
 
     for (let i = 0; i < deckNumber; i++) {
       const newDeck = createDeck()
-      newDecks.push(...newDeck) // Spread and push to flatten the array here
+      newDecks.push(...newDeck)
+      setDecks(newDecks)
     }
-    setDecks(newDecks)
   }
 
   const createDeck = () => {
-    const suits = ['hearts', 'spades', 'diamonds', 'clubs']
+    const suits = ['H', 'S', 'D', 'C']
     return suits.flatMap((suit) =>
-      Array.from({ length: 13 }, (_, i) => ({
-        id: uniqid(),
-        number: i + 1,
-        suit: suit,
-      }))
+      Array.from({ length: 13 }, (_, i) => {
+        let number = i + 1
+
+        // Map 11, 12, 13, and 1 to J, Q, K, and A respectively
+        let card
+        if (number === 1) {
+          card = 'A'
+        } else if (number === 11) {
+          card = 'J'
+        } else if (number === 12) {
+          card = 'Q'
+        } else if (number === 13) {
+          card = 'K'
+        } else {
+          card = number.toString()
+        }
+
+        let value
+        if (number < 11) {
+          value = number
+        } else if (number < 14) {
+          value = 10
+        } else {
+          value = 11
+        }
+
+        return {
+          id: uniqid(),
+          card: card, // This will now be 'A', 'J', 'Q', 'K', or '2'-'10'
+          suit: suit,
+          value: value,
+        }
+      })
     )
   }
 
@@ -68,7 +96,7 @@ const MainPage = () => {
           </div>
           <button onClick={playCard}>Play Card</button>
           <div className="h4 w4 ba bw1">
-            <p>Number: {currentCard?.number}</p>
+            <p>Number: {currentCard?.card}</p>
             <p>Suit: {currentCard?.suit}</p>
           </div>
         </div>
@@ -77,4 +105,4 @@ const MainPage = () => {
     </div>
   )
 }
-export default MainPage
+export default Game
