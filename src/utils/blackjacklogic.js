@@ -1,34 +1,19 @@
 import uniqid from 'uniqid'
 
-export function onHit(playerHand, setPlayerHand, decks, setDecks) {
-  console.log('onHit called with decks:', decks)
+export function onHit({ playerHand, setPlayerHand, setDecks }) {
+  setDecks((prevDecks) => {
+    if (!prevDecks || prevDecks.length === 0) {
+      console.error('Deck is empty or undefined')
+      return prevDecks
+    }
 
-  let updatedDeck = decks
-
-  //   let result = playCard2(updatedDeck)
-  //   newHand.push(result.card)
-  //   updatedDeck = result.newDeck
-
-  //   setHand(newHand)
-  //   setDecks(updatedDeck)
-  if (!decks || !Array.isArray(decks)) {
-    console.error('Deck is undefined or not an array')
-    return
-  }
-
-  if (decks.length === 0) {
-    console.error('Deck is empty')
-    return
-  }
-
-  if (updatedDeck.length > 0) {
-    console.log('deck length > 0 ')
-    const card = updatedDeck[0]
-    const newDeck = updatedDeck.slice(1)
+    const card = prevDecks[0]
+    const newDeck = prevDecks.slice(1)
     const newHand = [...playerHand, card]
-    setDecks(newDeck)
+
     setPlayerHand(newHand)
-  }
+    return newDeck
+  })
 }
 
 export function createDecks({ deckNumber, setDecks }) {
