@@ -6,8 +6,8 @@ const Game = () => {
   const [decks, setDecks] = useState([])
   const [currentCard, setCurrentCard] = useState(null)
   const [deckNumber, setDeckNumber] = useState(0)
-  const [playerHand, setPlayerHand] = useState(null)
-  const [dealerHand, setDealerHand] = useState(null)
+  const [playerHand, setPlayerHand] = useState([])
+  const [dealerHand, setDealerHand] = useState([])
 
   const handleDeckNumberChange = (event) => {
     setDeckNumber(Number(event.target.value))
@@ -31,9 +31,11 @@ const Game = () => {
           </button>
         </div>
         <button
-          onClick={() =>
+          onClick={() => {
             dealCards({ setPlayerHand, setDealerHand, decks, setDecks })
-          }
+            console.log(playerHand)
+            console.log(dealerHand)
+          }}
         >
           DEAL
         </button>
