@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import uniqid from 'uniqid'
+import Card from './components/Card'
 
 const Game = () => {
   const [decks, setDecks] = useState([])
@@ -16,12 +17,25 @@ const Game = () => {
 
   const createDecks = () => {
     let newDecks = []
+    console.log(newDecks)
 
     for (let i = 0; i < deckNumber; i++) {
       const newDeck = createDeck()
       newDecks.push(...newDeck)
-      setDecks(newDecks)
     }
+
+    for (let i = 7; i > 0; i--) {
+      for (let i = newDecks.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1))
+        // console.log(newDecks[i])
+        // console.log(newDecks[j])
+        const temp = newDecks[i]
+        newDecks[i] = newDecks[j]
+        newDecks[j] = temp
+      }
+      console.log(newDecks)
+    }
+    setDecks(newDecks)
   }
 
   const createDeck = () => {
@@ -63,11 +77,23 @@ const Game = () => {
     )
   }
 
-  const playCard = () => {
+  const playRandomCard = () => {
     if (decks.length > 0) {
       const index = Math.floor(Math.random() * decks.length)
       const card = decks[index]
       const newDeck = [...decks.slice(0, index), ...decks.slice(index + 1)]
+      setDecks(newDeck)
+      setCurrentCard(card)
+    } else {
+      const card = { number: 'Out of Cards', suit: 'please deal again' }
+      setCurrentCard(card)
+    }
+  }
+
+  const playCard = () => {
+    if (decks.length > 0) {
+      const card = decks[0]
+      const newDeck = [...decks.slice(0, 0), ...decks.slice(1)]
       setDecks(newDeck)
       setCurrentCard(card)
     } else {
@@ -98,6 +124,7 @@ const Game = () => {
           <div className="h4 w4 ba bw1">
             <p>Number: {currentCard?.card}</p>
             <p>Suit: {currentCard?.suit}</p>
+            <Card card={currentCard?.card} suit={currentCard?.suit} />
           </div>
         </div>
       </div>
