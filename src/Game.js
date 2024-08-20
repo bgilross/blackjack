@@ -1,10 +1,11 @@
 import { useState } from 'react'
 import Card from './components/Card'
-import { createDecks, playCard, dealCards } from './utils/blackjacklogic'
+import { createDecks, onHit, playCard, dealCards } from './utils/blackjacklogic'
+import Dealer from './components/Dealer'
+import Player from './components/Player'
 
 const Game = () => {
   const [decks, setDecks] = useState([])
-  const [currentCard, setCurrentCard] = useState(null)
   const [deckNumber, setDeckNumber] = useState(0)
   const [playerHand, setPlayerHand] = useState([])
   const [dealerHand, setDealerHand] = useState([])
@@ -41,14 +42,43 @@ const Game = () => {
         </button>
       </div>
       <div className="vh-75 flex flex-column pa4">
-        <div className="ba bw1 br4 h-75 pa3 flex flex-wrap items-center justify-center">
-          <button onClick={() => playCard({ decks, setCurrentCard, setDecks })}>
-            Play Card
-          </button>
-          <div className="h4 w4 ba bw1">
-            <p>Number: {currentCard?.card}</p>
-            <p>Suit: {currentCard?.suit}</p>
-            <Card card={currentCard?.card} suit={currentCard?.suit} />
+        <div className="ba bw1 br4 h-75 pa3 flex flex-wrap flex-column items-center justify-between">
+          <div className="dealer">
+            <button onClick={() => console.log(dealerHand)}>log hand</button>
+            <Dealer dealerHand={dealerHand} />
+          </div>
+          <div>
+            <button onClick={() => console.log(JSON.stringify(decks))}>
+              Log Deck
+            </button>
+          </div>
+          <div className="player">
+            <Player playerHand={playerHand} />
+            <button onClick={() => console.log(playerHand)}>log hand</button>
+            <button
+              onClick={() => {
+                console.log('Before onHit:', decks)
+                if (!decks || decks.length === 0) {
+                  console.error('Deck is undefined or empty before hitting.')
+                  return
+                }
+                onHit({
+                  playerHand,
+                  setPlayerHand,
+                  decks: [...decks],
+                  setDecks,
+                })
+              }}
+            >
+              HIT
+            </button>
+            <button
+              onClick={() => {
+                console.log('Button next to  onHit:', decks)
+              }}
+            >
+              Log again...
+            </button>
           </div>
         </div>
       </div>

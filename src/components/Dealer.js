@@ -1,6 +1,10 @@
 import Card from './Card'
 
 const Dealer = ({ dealerHand }) => {
-  return <div>Dealer</div>
+  const displayHand = dealerHand.map((card) => (
+    <Card key={card.id} card={card.card} suit={card.suit} />
+  ))
+
+  return <div className="flex">{displayHand}</div>
 }
 export default Dealer

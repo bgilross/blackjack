@@ -1,5 +1,36 @@
 import uniqid from 'uniqid'
 
+export function onHit(playerHand, setPlayerHand, decks, setDecks) {
+  console.log('onHit called with decks:', decks)
+
+  let updatedDeck = decks
+
+  //   let result = playCard2(updatedDeck)
+  //   newHand.push(result.card)
+  //   updatedDeck = result.newDeck
+
+  //   setHand(newHand)
+  //   setDecks(updatedDeck)
+  if (!decks || !Array.isArray(decks)) {
+    console.error('Deck is undefined or not an array')
+    return
+  }
+
+  if (decks.length === 0) {
+    console.error('Deck is empty')
+    return
+  }
+
+  if (updatedDeck.length > 0) {
+    console.log('deck length > 0 ')
+    const card = updatedDeck[0]
+    const newDeck = updatedDeck.slice(1)
+    const newHand = [...playerHand, card]
+    setDecks(newDeck)
+    setPlayerHand(newHand)
+  }
+}
+
 export function createDecks({ deckNumber, setDecks }) {
   let newDecks = []
   console.log(newDecks)
@@ -21,38 +52,36 @@ export function createDecks({ deckNumber, setDecks }) {
   setDecks(newDecks)
 }
 
-// export function dealCards({ setPlayerHand, setDealerHand, decks, setDecks }) {
-//   console.log('deal cards starting')
-//   setPlayerHand((prevHand) => [...prevHand, playCard2(decks, setDecks)])
-//   setDealerHand((prevHand) => [...prevHand, playCard2(decks, setDecks)])
-//   setPlayerHand((prevHand) => [...prevHand, playCard2(decks, setDecks)])
-//   setDealerHand((prevHand) => [...prevHand, playCard2(decks, setDecks)])
-// }
-
 export function dealCards({ setPlayerHand, setDealerHand, decks, setDecks }) {
   console.log('deal cards starting')
 
-  let result = playCard2(decks)
-  setPlayerHand((prevHand) => [...prevHand, result.card])
-  setDecks(result.newDeck)
+  let newPlayerHand = []
+  let newDealerHand = []
+  let updatedDeck = decks
 
-  result = playCard2(result.newDeck)
-  setDealerHand((prevHand) => [...prevHand, result.card])
-  setDecks(result.newDeck)
+  let result = playCard2(updatedDeck)
+  newPlayerHand.push(result.card)
+  updatedDeck = result.newDeck
+  console.log(updatedDeck)
+  result = playCard2(updatedDeck)
+  newDealerHand.push(result.card)
+  updatedDeck = result.newDeck
 
-  result = playCard2(result.newDeck)
-  setPlayerHand((prevHand) => [...prevHand, result.card])
-  setDecks(result.newDeck)
+  result = playCard2(updatedDeck)
+  newPlayerHand.push(result.card)
+  updatedDeck = result.newDeck
 
-  result = playCard2(result.newDeck)
-  setDealerHand((prevHand) => [...prevHand, result.card])
-  setDecks(result.newDeck)
-}
+  result = playCard2(updatedDeck)
+  newDealerHand.push(result.card)
+  updatedDeck = result.newDeck
 
-export function onHit(setHand, decks, setDecks) {
-  let result = playCard2(decks)
-  setHand((prevHand) => [...prevHand, result.card])
-  setDecks(result.newDeck)
+  setPlayerHand(newPlayerHand)
+  setDealerHand(newDealerHand)
+  setDecks(updatedDeck)
+
+  console.log('deal cards completed')
+  console.log('Player Hand:', newPlayerHand)
+  console.log('Dealer Hand:', newDealerHand)
 }
 
 export function playCard2(decks) {
@@ -70,19 +99,34 @@ export function playCard2(decks) {
   }
 }
 
-// export function playCard2(decks, setDecks) {
-//   console.log('play cards starting')
-//   if (decks.length > 0) {
-//     console.log(`deck length > 0 check${decks.length}`)
-//     const card = decks[0]
-//     console.log(`card at index 0 is ${JSON.stringify(card)}`)
-//     const newDeck = decks.slice(1)
-//     console.log({ newDeck })
+// export function onHit(hand, setHand, decks2, setDecks) {
+//   console.log('onHit called with decks:', decks2)
+
+//   let updatedDeck = decks2
+
+//   //   let result = playCard2(updatedDeck)
+//   //   newHand.push(result.card)
+//   //   updatedDeck = result.newDeck
+
+//   //   setHand(newHand)
+//   //   setDecks(updatedDeck)
+//   if (!decks2 || !Array.isArray(decks2)) {
+//     console.error('Deck is undefined or not an array')
+//     return
+//   }
+
+//   if (decks2.length === 0) {
+//     console.error('Deck is empty')
+//     return
+//   }
+
+//   if (updatedDeck.length > 0) {
+//     console.log('deck length > 0 ')
+//     const card = updatedDeck[0]
+//     const newDeck = updatedDeck.slice(1)
+//     const newHand = [...hand, card]
 //     setDecks(newDeck)
-//     return card
-//   } else {
-//     const card = { number: 'Out of Cards', suit: 'please deal again' }
-//     return card
+//     setHand(newHand)
 //   }
 // }
 
