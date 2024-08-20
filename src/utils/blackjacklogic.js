@@ -21,6 +21,29 @@ export function createDecks({ deckNumber, setDecks }) {
   setDecks(newDecks)
 }
 
+export function dealCards(setPlayerHand, setDealerHand, decks, setDecks) {
+  setPlayerHand((prevHand) => [...prevHand, playCard2(decks, setDecks)])
+  setDealerHand((prevHand) => [...prevHand, playCard2(decks, setDecks)])
+  setPlayerHand((prevHand) => [...prevHand, playCard2(decks, setDecks)])
+  setDealerHand((prevHand) => [...prevHand, playCard2(decks, setDecks)])
+}
+
+export function onHit(setHand, decks, setDecks) {
+  setHand((prevHand) => [...prevHand, playCard2(decks, setDecks)])
+}
+
+export function playCard2(decks, setDecks) {
+  if (decks.length > 0) {
+    const card = decks[0]
+    const newDeck = decks.slice(1)
+    setDecks(newDeck)
+    return card
+  } else {
+    const card = { number: 'Out of Cards', suit: 'please deal again' }
+    return card
+  }
+}
+
 export function playCard(decks, setCurrentCard, setDecks) {
   if (decks.length > 0) {
     const card = decks[0]

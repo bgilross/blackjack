@@ -1,11 +1,13 @@
 import { useState } from 'react'
 import Card from './components/Card'
-import { createDecks, playCard } from './utils/blackjacklogic'
+import { createDecks, playCard, dealCards } from './utils/blackjacklogic'
 
 const Game = () => {
   const [decks, setDecks] = useState([])
   const [currentCard, setCurrentCard] = useState(null)
   const [deckNumber, setDeckNumber] = useState(0)
+  const [playerHand, setPlayerHand] = useState(null)
+  const [dealerHand, setDealerHand] = useState(null)
 
   const handleDeckNumberChange = (event) => {
     setDeckNumber(Number(event.target.value))
@@ -28,6 +30,13 @@ const Game = () => {
             Create Decks
           </button>
         </div>
+        <button
+          onClick={() =>
+            dealCards({ setPlayerHand, setDealerHand, decks, setDecks })
+          }
+        >
+          DEAL
+        </button>
       </div>
       <div className="vh-75 flex flex-column pa4">
         <div className="ba bw1 br4 h-75 pa3 flex flex-wrap items-center justify-center">
