@@ -1,6 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Card from './components/Card'
-import { createDecks, onHit, playCard, dealCards } from './utils/blackjacklogic'
+import {
+  createDecks,
+  onHit,
+  playCard,
+  dealCards,
+  calculateHand,
+} from './utils/blackjacklogic'
 import Dealer from './components/Dealer'
 import Player from './components/Player'
 
@@ -9,11 +15,75 @@ const Game = () => {
   const [deckNumber, setDeckNumber] = useState(0)
   const [playerHand, setPlayerHand] = useState([])
   const [dealerHand, setDealerHand] = useState([])
-  const [isGameOver, setGameOver] = useState(false)
-  const [isPlayerTurn, setPlayerTurn] = useState(true)
+  const [isGameOver, setIsGameOver] = useState(false)
+  const [isPlayerTurn, setIsPlayerTurn] = useState(true)
+  const [gameOutcome, setGameOutcome] = useState('')
+
+  useEffect(() => {
+    console.log('use effect starting: playerhand:', playerHand)
+    if (playerHand.length > 0 && !isGameOver) {
+      if (calculateHand({ hand: playerHand }) > 21) {
+        setIsGameOver(true)
+        setGameOutcome('Player BUSTS! Dealer WINS!')
+      }
+    }
+  }, [playerHand])
+
+  useEffect(() => {
+    if (dealerHand.length > 0 && !isGameOver && !isPlayerTurn) {
+      let handValue = calculateHand({ hand: dealerHand })
+      if (handValue > 21) {
+        setIsGameOver(true)
+        setGameOutcome('Dealer BUSTS! Player WINS!')
+      }
+      if (handValue < 17) {
+        onHit({ hand: dealerHand, setHand: setDealerHand, decks, setDecks })
+        return
+      }
+      if (handValue > 16) handleCheckOutcome()
+    }
+  }, [dealerHand, isPlayerTurn])
+
+  const handleCheckOutcome = () => {
+    const playerScore = calculateHand({ hand: playerHand })
+    const dealerScore = calculateHand({ hand: dealerHand })
+    if (playerScore > dealerScore) {
+      setIsGameOver(true)
+      setGameOutcome('Player Beats Dealer!')
+    } else if (playerScore < dealerScore) {
+      setIsGameOver(true)
+      setGameOutcome('Dealer Beats Player!')
+    } else {
+      setIsGameOver(true)
+      setGameOutcome('Gross, a TIE!')
+    }
+  }
 
   const handleDeckNumberChange = (event) => {
     setDeckNumber(Number(event.target.value))
+  }
+
+  const handleCreateDecks = () => {
+    console.log('running handlCreateDecks')
+    createDecks({ deckNumber, setDecks })
+  }
+
+  const handleDealCards = () => {
+    setIsGameOver(false)
+    dealCards({ setPlayerHand, setDealerHand, decks, setDecks })
+    setIsPlayerTurn(true)
+  }
+
+  const handlePlayerHit = () => {
+    onHit({ hand: playerHand, setHand: setPlayerHand, decks, setDecks })
+  }
+
+  const handlePlayerStand = () => {
+    setIsPlayerTurn(false)
+  }
+
+  const handleGameOver = () => {
+    setIsGameOver(true)
   }
 
   return (
@@ -29,60 +99,37 @@ const Game = () => {
             name="deckNumber"
             id="deckNumber"
           />
-          <button onClick={() => createDecks({ deckNumber, setDecks })}>
-            Create Decks
-          </button>
+          <button onClick={handleCreateDecks}>Create Decks</button>
         </div>
-        <button
-          onClick={() => {
-            dealCards({ setPlayerHand, setDealerHand, decks, setDecks })
-            console.log(playerHand)
-            console.log(dealerHand)
-          }}
-        >
-          DEAL
-        </button>
+        <button onClick={handleDealCards}>DEAL</button>
       </div>
       <div className="vh-75 flex flex-column pa4">
-        <div className="ba bw1 br4 h-75 pa3 flex flex-wrap flex-column items-center justify-between">
+        <div className="ba bw1 br4 h-100 pa3 flex flex-column items-center justify-between">
           <div className="dealer">
-            <button onClick={() => console.log(dealerHand)}>log hand</button>
             <Dealer dealerHand={dealerHand} />
           </div>
           <div>
-            <button onClick={() => console.log(decks)}>Log Deck</button>
-          </div>
-          <div className="player">
-            <Player playerHand={playerHand} />
-            <button onClick={() => console.log(playerHand)}>log hand</button>
-            <button
-              onClick={() => {
-                console.log('Before onHit:', decks)
-                if (!decks || decks.length === 0) {
-                  console.error('Deck is undefined or empty before hitting.')
-                  return
-                }
-                onHit({
-                  playerHand,
-                  setPlayerHand,
-                  decks: [...decks],
-                  setDecks,
-                })
-              }}
-            >
-              HIT
-            </button>
-            <button
-              onClick={() => {
-                console.log('Button next to  onHit:', decks)
-              }}
-            >
-              Log again...
-            </button>
+            {isGameOver ? (
+              <div className="ba bw1 f2 ma2 flex flex-column items-center">
+                <h2>Game Over</h2>
+                <h3>{gameOutcome}</h3>
+                <Player playerHand={playerHand} />
+                <button onClick={handleDealCards}>Play Again</button>
+              </div>
+            ) : (
+              <div className="player">
+                <Player playerHand={playerHand} />
+              </div>
+            )}
+            {!isGameOver && isPlayerTurn && (
+              <div>
+                <button onClick={handlePlayerHit}>HIT</button>
+                <button onClick={handlePlayerStand}>STAND</button>
+              </div>
+            )}
           </div>
         </div>
       </div>
-      <div className="ba bw1 f1 ma2">Footer</div>
     </div>
   )
 }

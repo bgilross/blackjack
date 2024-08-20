@@ -1,6 +1,6 @@
 import uniqid from 'uniqid'
 
-export function onHit({ playerHand, setPlayerHand, setDecks }) {
+export function onHit({ hand, setHand, setDecks }) {
   setDecks((prevDecks) => {
     if (!prevDecks || prevDecks.length === 0) {
       console.error('Deck is empty or undefined')
@@ -9,14 +9,34 @@ export function onHit({ playerHand, setPlayerHand, setDecks }) {
 
     const card = prevDecks[0]
     const newDeck = prevDecks.slice(1)
-    const newHand = [...playerHand, card]
-
-    setPlayerHand(newHand)
+    const newHand = [...hand, card]
+    setHand(newHand)
     return newDeck
   })
 }
 
+export function calculateHand({ hand }) {
+  let value = 0
+  let aceCount = 0
+
+  hand.forEach((card) => {
+    if (card.card === 'A') {
+      aceCount += 1
+      value += 11
+    } else {
+      value += card.value
+    }
+  })
+
+  while (value > 21 && aceCount > 0) {
+    value -= 10
+    aceCount -= 1
+  }
+
+  return value
+}
 export function createDecks({ deckNumber, setDecks }) {
+  console.log('running createDecks decknumber:', deckNumber)
   let newDecks = []
   console.log(newDecks)
 
@@ -116,6 +136,7 @@ export function playCard2(decks) {
 // }
 
 const createDeck = () => {
+  console.log('running createDeck')
   const suits = ['H', 'S', 'D', 'C']
   return suits.flatMap((suit) =>
     Array.from({ length: 13 }, (_, i) => {
