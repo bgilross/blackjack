@@ -8,6 +8,7 @@ import {
 import Dealer from './components/Dealer'
 import Player from './components/Player'
 import Deck from './components/Deck'
+import { Scoreboard } from './components/Scoreboard'
 
 const Game = () => {
   const [decks, setDecks] = useState([])
@@ -19,7 +20,17 @@ const Game = () => {
   const [gameOutcome, setGameOutcome] = useState('')
   const [playerScore, setPlayerScore] = useState(null)
   const [dealerScore, setDealerScore] = useState(null)
-
+  const [total, setTotal] = useState({
+    dealerScore: 0,
+    playerScore: 0,
+    ties: 0,
+  })
+  const handleScore = (name) => {
+    setTotal((prev) => ({
+      ...prev,
+      [name + 'Score']: prev[name + 'Score'] + 1,
+    }))
+  }
   //check PLAYER score on hand update
   useEffect(() => {
     console.log(
@@ -35,6 +46,7 @@ const Game = () => {
         if (playerScore > 21) {
           setIsGameOver(true)
           setGameOutcome('Player BUSTS! Dealer WINS!')
+          handleScore('dealer')
         }
       }
     }
@@ -51,6 +63,7 @@ const Game = () => {
       if (handValue > 21) {
         setIsGameOver(true)
         setGameOutcome('Dealer BUSTS! Player WINS!')
+        handleScore('player')
       }
       if (handValue < 17) {
         onHit({ hand: dealerHand, setHand: setDealerHand, decks, setDecks })
@@ -66,12 +79,15 @@ const Game = () => {
     if (playerScore > dealerScore) {
       setIsGameOver(true)
       setGameOutcome('Player Beats Dealer!')
+      handleScore('player')
     } else if (playerScore < dealerScore) {
       setIsGameOver(true)
       setGameOutcome('Dealer Beats Player!')
+      handleScore('dealer')
     } else {
       setIsGameOver(true)
       setGameOutcome('Gross, a TIE!')
+      setTotal((prevTotal) => prevTotal.ties++)
     }
   }
 
@@ -100,6 +116,8 @@ const Game = () => {
 
   return (
     <div className="min-vh-100 bg-dark-green pa1">
+      <Scoreboard total={total} />
+      {/* <button onClick={handleScore('dealer')}>Score Dealer</button> */}
       <div className="HEADER flex flex-column items-center justify-center">
         <h1 className="f-6 flex items-center justify-center">BLACKJACK</h1>
         <Deck
@@ -112,11 +130,16 @@ const Game = () => {
       <div className="vh-75 flex flex-column pa4">
         <div className="ba bw1 br4 h-100 pa3 flex flex-column items-center justify-between">
           <div className="dealer">
-            <Dealer dealerHand={dealerHand} />
-            <h1>{dealerScore}</h1>
+            <Dealer
+              dealerHand={dealerHand}
+              isGameOver={isGameOver}
+              isPlayerTurn={isPlayerTurn}
+              dealerScore={dealerScore}
+            />
           </div>
 
           <div>
+            <h1>{playerScore}</h1>
             {isGameOver ? (
               <div className="ba bw1 f2 ma2 flex flex-column items-center">
                 <h2>Game Over</h2>
@@ -126,7 +149,6 @@ const Game = () => {
               </div>
             ) : (
               <div className="player">
-                <h1>{playerScore}</h1>
                 <Player playerHand={playerHand} />
               </div>
             )}

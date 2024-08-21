@@ -104,37 +104,6 @@ export function playCard2(decks) {
   }
 }
 
-// export function onHit(hand, setHand, decks2, setDecks) {
-//   console.log('onHit called with decks:', decks2)
-
-//   let updatedDeck = decks2
-
-//   //   let result = playCard2(updatedDeck)
-//   //   newHand.push(result.card)
-//   //   updatedDeck = result.newDeck
-
-//   //   setHand(newHand)
-//   //   setDecks(updatedDeck)
-//   if (!decks2 || !Array.isArray(decks2)) {
-//     console.error('Deck is undefined or not an array')
-//     return
-//   }
-
-//   if (decks2.length === 0) {
-//     console.error('Deck is empty')
-//     return
-//   }
-
-//   if (updatedDeck.length > 0) {
-//     console.log('deck length > 0 ')
-//     const card = updatedDeck[0]
-//     const newDeck = updatedDeck.slice(1)
-//     const newHand = [...hand, card]
-//     setDecks(newDeck)
-//     setHand(newHand)
-//   }
-// }
-
 const createDeck = () => {
   console.log('running createDeck')
   const suits = ['H', 'S', 'D', 'C']
@@ -142,7 +111,6 @@ const createDeck = () => {
     Array.from({ length: 13 }, (_, i) => {
       let number = i + 1
 
-      // Map 11, 12, 13, and 1 to J, Q, K, and A respectively
       let card
       if (number === 1) {
         card = 'A'
@@ -167,7 +135,7 @@ const createDeck = () => {
 
       return {
         id: uniqid(),
-        card: card, // This will now be 'A', 'J', 'Q', 'K', or '2'-'10'
+        card: card,
         suit: suit,
         value: value,
       }
@@ -180,18 +148,6 @@ export function playRandomCard({ decks, setCurrentCard, setDecks }) {
     const index = Math.floor(Math.random() * decks.length)
     const card = decks[index]
     const newDeck = [...decks.slice(0, index), ...decks.slice(index + 1)]
-    setDecks(newDeck)
-    setCurrentCard(card)
-  } else {
-    const card = { number: 'Out of Cards', suit: 'please deal again' }
-    setCurrentCard(card)
-  }
-}
-
-export function playCard(decks, setCurrentCard, setDecks) {
-  if (decks.length > 0) {
-    const card = decks[0]
-    const newDeck = [...decks.slice(0, 0), ...decks.slice(1)]
     setDecks(newDeck)
     setCurrentCard(card)
   } else {
