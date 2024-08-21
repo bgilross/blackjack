@@ -1,14 +1,13 @@
 import { useState, useEffect } from 'react'
-import Card from './components/Card'
 import {
   createDecks,
   onHit,
-  playCard,
   dealCards,
   calculateHand,
 } from './utils/blackjacklogic'
 import Dealer from './components/Dealer'
 import Player from './components/Player'
+import Deck from './components/Deck'
 
 const Game = () => {
   const [decks, setDecks] = useState([])
@@ -18,20 +17,37 @@ const Game = () => {
   const [isGameOver, setIsGameOver] = useState(false)
   const [isPlayerTurn, setIsPlayerTurn] = useState(true)
   const [gameOutcome, setGameOutcome] = useState('')
+  const [playerScore, setPlayerScore] = useState(null)
+  const [dealerScore, setDealerScore] = useState(null)
 
+  //check PLAYER score on hand update
   useEffect(() => {
-    console.log('use effect starting: playerhand:', playerHand)
-    if (playerHand.length > 0 && !isGameOver) {
-      if (calculateHand({ hand: playerHand }) > 21) {
-        setIsGameOver(true)
-        setGameOutcome('Player BUSTS! Dealer WINS!')
+    console.log(
+      `Player useEffect starting: HAND: ${JSON.stringify(playerHand)}`
+    )
+    if (playerHand.length < 1) {
+      return
+    } else {
+      let playerScore
+      playerScore = calculateHand({ hand: playerHand })
+      setPlayerScore(playerScore)
+      if (playerHand.length > 0 && !isGameOver) {
+        if (playerScore > 21) {
+          setIsGameOver(true)
+          setGameOutcome('Player BUSTS! Dealer WINS!')
+        }
       }
     }
   }, [playerHand])
 
+  //handle DEALER's Turn and score checking
   useEffect(() => {
+    let handValue
+    if (dealerHand.length > 0) {
+      handValue = calculateHand({ hand: dealerHand })
+      setDealerScore(handValue)
+    }
     if (dealerHand.length > 0 && !isGameOver && !isPlayerTurn) {
-      let handValue = calculateHand({ hand: dealerHand })
       if (handValue > 21) {
         setIsGameOver(true)
         setGameOutcome('Dealer BUSTS! Player WINS!')
@@ -82,32 +98,24 @@ const Game = () => {
     setIsPlayerTurn(false)
   }
 
-  const handleGameOver = () => {
-    setIsGameOver(true)
-  }
-
   return (
     <div className="min-vh-100 bg-dark-green pa1">
-      <div className="flex flex-column items-center justify-center">
+      <div className="HEADER flex flex-column items-center justify-center">
         <h1 className="f-6 flex items-center justify-center">BLACKJACK</h1>
-        <div className="w-100">
-          <label htmlFor="deckNumber">Deck Number</label>
-          <input
-            type="number"
-            value={deckNumber}
-            onChange={handleDeckNumberChange}
-            name="deckNumber"
-            id="deckNumber"
-          />
-          <button onClick={handleCreateDecks}>Create Decks</button>
-        </div>
-        <button onClick={handleDealCards}>DEAL</button>
+        <Deck
+          handleDealCards={handleDealCards}
+          handleDeckNumberChange={handleDeckNumberChange}
+          handleCreateDecks={handleCreateDecks}
+          deckNumber={deckNumber}
+        />
       </div>
       <div className="vh-75 flex flex-column pa4">
         <div className="ba bw1 br4 h-100 pa3 flex flex-column items-center justify-between">
           <div className="dealer">
             <Dealer dealerHand={dealerHand} />
+            <h1>{dealerScore}</h1>
           </div>
+
           <div>
             {isGameOver ? (
               <div className="ba bw1 f2 ma2 flex flex-column items-center">
@@ -118,6 +126,7 @@ const Game = () => {
               </div>
             ) : (
               <div className="player">
+                <h1>{playerScore}</h1>
                 <Player playerHand={playerHand} />
               </div>
             )}
