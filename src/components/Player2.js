@@ -2,7 +2,7 @@ import { useBlackjack } from '../utils/useBlackjack'
 import Card from './Card'
 
 const Player2 = () => {
-  const { currentHands, hit } = useBlackjack
+  const { currentHands, hit } = useBlackjack()
   return (
     <div className="w-30 pa3 br2 bg-light-green shadow-1">
       <h2 className="f3 mb3 tc">Your Hand</h2>
@@ -12,7 +12,8 @@ const Player2 = () => {
             key={index}
             className="w3 h4 ba b--black-10 br2 ma2 flex items-center justify-center bg-white"
           >
-            <Card key={card.id} card={card.card} suit={card.suit} />
+            <Card card={card.card} suit={card.suit} />
+            <h1> card goes here</h1>
           </div>
         ))}
       </div>

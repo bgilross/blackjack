@@ -1,9 +1,13 @@
+import { useState } from 'react'
 import Player2 from './components/Player2'
 import { useBlackjack } from './utils/useBlackjack'
+import Dealer2 from './components/Dealer2'
 
 const Game2 = () => {
-  const { currentHands, total, gameState, createDeck, deal, hit } =
+  const { currentHands, total, gameState, createDecks, deal, hit } =
     useBlackjack()
+
+  const [deckNumber, setDeckNumber] = useState(0)
 
   return (
     <div className="pa4 mw7 center">
@@ -14,25 +18,23 @@ const Game2 = () => {
           over.
         </p>
       </header>
-
+      <section>
+        <input
+          type="number"
+          value={deckNumber}
+          onChange={(e) => setDeckNumber(Number(e.target.value))}
+          name="deckNumber"
+          id="deckNumber"
+        />
+        <button onClick={() => createDecks(deckNumber)}>Create Decks</button>
+        <button onClick={() => deal()}>Deal</button>
+      </section>
       <section className="flex justify-between items-start">
         {/* Player's Hand */}
         <Player2 />
 
         {/* Dealer's Hand */}
-        <div className="w-30 pa3 br2 bg-light-red shadow-1">
-          <h2 className="f3 mb3 tc">Dealer's Hand</h2>
-          <div className="flex flex-wrap justify-center">
-            {currentHands?.dealer?.map((card, index) => (
-              <div
-                key={index}
-                className="w3 h4 ba b--black-10 br2 ma2 flex items-center justify-center bg-white"
-              >
-                {card}
-              </div>
-            ))}
-          </div>
-        </div>
+        <Dealer2 />
       </section>
 
       {/* AI Players Section */}

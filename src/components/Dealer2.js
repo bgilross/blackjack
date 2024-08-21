@@ -1,7 +1,10 @@
 import { useBlackjack } from '../utils/useBlackjack'
+import Card from './Card'
+import CardBack from '../images/cards/CardBack.png'
 
 const Dealer2 = () => {
-  const { currentHands } = useBlackjack
+  const { currentHands, gameState } = useBlackjack()
+  const { isGameOver, isPlayerTurn } = gameState
 
   return (
     <div className="w-30 pa3 br2 bg-light-red shadow-1">
@@ -15,7 +18,7 @@ const Dealer2 = () => {
             {!isGameOver && isPlayerTurn ? (
               <img src={CardBack} alt="card back" height="150" width="100" />
             ) : (
-              <Card key={card.id} card={card.card} suit={card.suit} />
+              <Card card={card.card} suit={card.suit} />
             )}
           </div>
         ))}
