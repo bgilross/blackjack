@@ -2,7 +2,7 @@ import { useBlackjack } from '../utils/useBlackjack'
 import Card from './Card'
 
 const Player2 = () => {
-  const { currentHands, hit } = useBlackjack()
+  const { currentHands, hit, gameState, deck } = useBlackjack()
   return (
     <div className="w-30 pa3 br2 bg-light-green shadow-1">
       <h2 className="f3 mb3 tc">Your Hand</h2>
@@ -22,6 +22,27 @@ const Player2 = () => {
         className="mt3 w-100 pv2 ph3 bg-dark-green white br2 grow pointer"
       >
         Hit
+      </button>
+      <button
+        onClick={() => {
+          console.log(deck)
+        }}
+      >
+        Show Decks
+      </button>
+      <button
+        onClick={() => {
+          console.log(currentHands)
+        }}
+      >
+        Show CurrentHands
+      </button>
+      <button
+        onClick={() => {
+          console.log(gameState)
+        }}
+      >
+        Show GameState
       </button>
     </div>
   )

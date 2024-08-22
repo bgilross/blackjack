@@ -4,7 +4,7 @@ import { useBlackjack } from './utils/useBlackjack'
 import Dealer2 from './components/Dealer2'
 
 const Game2 = () => {
-  const { currentHands, total, gameState, createDecks, deal, hit } =
+  const { currentHands, total, gameState, createDecks, deal, hit, deck } =
     useBlackjack()
 
   const [deckNumber, setDeckNumber] = useState(0)
@@ -32,7 +32,27 @@ const Game2 = () => {
       <section className="flex justify-between items-start">
         {/* Player's Hand */}
         <Player2 />
-
+        <button
+          onClick={() => {
+            console.log(deck)
+          }}
+        >
+          Show Decks
+        </button>
+        <button
+          onClick={() => {
+            console.log(currentHands)
+          }}
+        >
+          Show CurrentHands
+        </button>
+        <button
+          onClick={() => {
+            console.log(gameState)
+          }}
+        >
+          Show GameState
+        </button>
         {/* Dealer's Hand */}
         <Dealer2 />
       </section>

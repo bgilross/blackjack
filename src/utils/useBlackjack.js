@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import uniqid from 'uniqid'
+import { playCard2 } from './blackjacklogic'
 
 export const useBlackjack = () => {
   const [deck, setDeck] = useState([])
@@ -10,6 +11,7 @@ export const useBlackjack = () => {
     isPlayerTurn: true,
     gameOutcome: '',
     turn: [1, 2],
+    playerCount: 1,
   })
 
   const createDecks = (num) => {
@@ -31,37 +33,39 @@ export const useBlackjack = () => {
     }
     console.log(newDecks)
     setDeck(newDecks)
-    console.log(deck)
   }
 
-  const getCard = () => {
-    const card = deck[0]
-    const newDeck = deck.slice(1)
-    setDeck(newDeck)
-    return card
+  const getCard = (tempDeck) => {
+    const card = tempDeck[0]
+    console.log(`card at index 0 is ${card}`)
+    const newDeck = tempDeck.slice(1)
+    console.log(`newDeck after slice: ${newDeck.length} cards`)
+    return { card, newDeck }
   }
 
   const deal = () => {
-    console.log('deal starts')
-    const playerCount = gameState.turn.length
-    for (let i = 0; i < playerCount * 2; i++) {
-      console.log('deal loop starting: i = :', i)
-      if (i === playerCount * 2 - 1 || playerCount - 1) {
-        const card = getCard()
-        console.log('dealer getting card', card)
-        setCurrentHands((prev) => ({ ...prev, dealer: [...prev.dealer, card] }))
-        console.log('dealer hand', currentHands.dealer)
-      } else {
-        console.log('player getting card')
-        const card = getCard()
-        setCurrentHands((prev) => ({
-          ...prev,
-          player0: [...prev.player0, card],
-        }))
-        console.log('player hand: ', currentHands.player0)
-      }
+    console.log('deal cards starting')
+
+    let tempPlayerHand = []
+    let tempDealerHand = []
+    let tempDeck = deck
+
+    for (let i = 0; i < 2; i++) {
+      //deal player a card into their temp hand
+      let result = playCard2(tempDeck)
+      tempPlayerHand.push(result.card)
+      tempDeck = result.newDeck
+
+      result = playCard2(tempDeck)
+      tempDealerHand.push(result.card)
+      tempDeck = result.newDeck
     }
-    console.log('After Deal, current Hands: ', currentHands)
+
+    setCurrentHands((prev) => ({
+      ...prev,
+      dealer: tempDealerHand,
+      player0: tempPlayerHand,
+    }))
   }
 
   const hit = (player) => {

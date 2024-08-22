@@ -3,7 +3,7 @@ import Card from './Card'
 import CardBack from '../images/cards/CardBack.png'
 
 const Dealer2 = () => {
-  const { currentHands, gameState } = useBlackjack()
+  const { currentHands, gameState, deck } = useBlackjack()
   const { isGameOver, isPlayerTurn } = gameState
 
   return (
@@ -23,6 +23,27 @@ const Dealer2 = () => {
           </div>
         ))}
       </div>
+      <button
+        onClick={() => {
+          console.log(deck)
+        }}
+      >
+        Show Decks
+      </button>
+      <button
+        onClick={() => {
+          console.log(currentHands)
+        }}
+      >
+        Show CurrentHands
+      </button>
+      <button
+        onClick={() => {
+          console.log(gameState)
+        }}
+      >
+        Show GameState
+      </button>
     </div>
   )
 }
