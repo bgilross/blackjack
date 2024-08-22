@@ -28,7 +28,7 @@ const Player2 = () => {
         STAY
       </button>
       <button>SPLIT</button>
-      <div>{calculateHand(displayHand)}</div>
+      {/* <div>{calculateHand(currentHands.player0)}</div> */}
     </div>
   )
 }

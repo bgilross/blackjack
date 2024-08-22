@@ -1,22 +1,16 @@
 import { useState } from 'react'
 import Player2 from './components/Player2'
-import { useBlackjack } from './utils/useBlackjack'
 import Dealer2 from './components/Dealer2'
 import { useBlackjackContext } from './utils/BlackjackContext'
+import NumberInput from './components/NumberInput'
+import { calculateHand } from './utils/blackjacklogic'
 
 const Game2 = () => {
-  const {
-    currentHands,
-    handTotals,
-    total,
-    gameState,
-    createDecks,
-    deal,
-    hit,
-    deck,
-  } = useBlackjackContext()
+  const { currentHands, handTotals, gameState, createDecks, deal, hit, deck } =
+    useBlackjackContext()
 
   const [deckNumber, setDeckNumber] = useState(2)
+  const [playerCount, setPlayerCount] = useState(1)
 
   return (
     <div className="pa4 mw7 center">
@@ -28,48 +22,35 @@ const Game2 = () => {
         </p>
       </header>
       <section>
-        <input
-          type="number"
+        <NumberInput
           value={deckNumber}
           onChange={(e) => setDeckNumber(Number(e.target.value))}
-          name="deckNumber"
-          id="deckNumber"
         />
+
         <button onClick={() => createDecks(deckNumber)}>Create Decks</button>
         <button onClick={() => deal()}>Deal</button>
+      </section>
+      <section>
+        <NumberInput
+          value={playerCount}
+          onChange={(e) => setPlayerCount(Number(e.target.value))}
+        />
       </section>
       <section className="flex justify-between items-start">
         {/* Player's Hand */}
         <div>
           <Player2 />
           <h1>{handTotals.player0}</h1>
+          {/* {currentHands.player0 && currentHands.player0.length > 1 && (
+            <h1>{calculateHand(currentHands.player0)}</h1>
+          )} */}
         </div>
-        <button
-          onClick={() => {
-            console.log(deck)
-          }}
-        >
-          Show Decks
-        </button>
-        <button
-          onClick={() => {
-            console.log(currentHands)
-          }}
-        >
-          Show CurrentHands
-        </button>
-        <button
-          onClick={() => {
-            console.log(gameState)
-          }}
-        >
-          Show GameState
-        </button>
+
         {/* Dealer's Hand */}
         <div>
           <Dealer2 />
           {/* <h1>{handTotals.dealer}</h1> */}
-          {gameState.isGameOver && <h1>Score: {handTotals.dealer}</h1>}
+          {gameState.isGameOver && <h1>{handTotals.dealer}</h1>}
         </div>
       </section>
       {gameState.isGameOver && (

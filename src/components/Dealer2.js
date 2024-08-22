@@ -7,7 +7,7 @@ const Dealer2 = () => {
   const { isGameOver, isPlayerTurn } = gameState
 
   const displayHand = currentHands?.dealer?.map((card, index) => {
-    if (index != 1) {
+    if (index !== 1) {
       return <Card key={card.id} card={card.card} suit={card.suit} />
     } else {
       if (!isGameOver && isPlayerTurn) {
@@ -30,8 +30,6 @@ const Dealer2 = () => {
     <div className="pa3 br2 bg-light-red shadow-1">
       <h2 className="f3 mb3 tc">Dealer's Hand</h2>
       <div className="flex justify-center">{displayHand}</div>
-
-      {/* {displayHand.length > 0 && <h2>{calculateHand(displayHand)}</h2>} */}
     </div>
   )
 }
