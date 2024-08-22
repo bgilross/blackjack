@@ -7,7 +7,6 @@ import NumberInput from './components/NumberInput'
 const Game2 = () => {
   const {
     currentHands,
-    handTotals,
     gameState,
     createDecks,
     deal,
@@ -33,9 +32,10 @@ const Game2 = () => {
           value={deckNumber}
           onChange={(e) => setDeckNumber(Number(e.target.value))}
         />
-
-        <button onClick={() => createDecks(deckNumber)}>Create Decks</button>
-        <button onClick={() => deal()}>Deal</button>
+        <button onClick={() => createDecks(deckNumber, playerCount)}>
+          Create Decks
+        </button>
+        <button onClick={() => deal(playerCount)}>Deal</button>
       </section>
       <section>
         <NumberInput
@@ -47,18 +47,11 @@ const Game2 = () => {
         {/* Player's Hand */}
         <div>
           <Player2 />
-          <h1>{handTotals.player0}</h1>
-          <h1>{calculateHand(currentHands.player0)}</h1>
-          {/* {currentHands.player0 && currentHands.player0.length > 1 && (
-            <h1>{calculateHand(currentHands.player0)}</h1>
-          )} */}
         </div>
 
         {/* Dealer's Hand */}
         <div>
           <Dealer2 />
-          {/* <h1>{handTotals.dealer}</h1> */}
-          {gameState.isGameOver && <h1>{handTotals.dealer}</h1>}
         </div>
       </section>
       {gameState.isGameOver && (

@@ -9,26 +9,27 @@ const Player2 = () => {
     <Card key={card.id} card={card.card} suit={card.suit} />
   ))
   return (
-    <div className="pa3 br2 bg-light-green shadow-1">
-      <h2 className="f3 mb3 tc">Your Hand</h2>
-
-      <div className="flex justify-center">{displayHand}</div>
-      <button
-        onClick={() => {
-          hit('player0')
-        }}
-      >
-        HIT
-      </button>
-      <button
-        onClick={() => {
-          handleDealerTurn()
-        }}
-      >
-        STAY
-      </button>
-      <button>SPLIT</button>
-      {/* <div>{calculateHand(currentHands.player0)}</div> */}
+    <div>
+      <div className="pa3 br2 bg-light-green shadow-1">
+        <h2 className="f3 mb3 tc">Your Hand</h2>
+        <div className="flex justify-center">{displayHand}</div>
+        <button
+          onClick={() => {
+            hit('player0')
+          }}
+        >
+          HIT
+        </button>
+        <button
+          onClick={() => {
+            handleDealerTurn()
+          }}
+        >
+          STAY
+        </button>
+        <button>SPLIT</button>
+      </div>
+      <h1>{calculateHand(currentHands.player0)}</h1>
     </div>
   )
 }

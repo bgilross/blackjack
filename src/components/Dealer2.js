@@ -3,7 +3,7 @@ import CardBack from '../images/cards/CardBack.png'
 import { useBlackjackContext } from '../utils/BlackjackContext'
 
 const Dealer2 = () => {
-  const { currentHands, gameState } = useBlackjackContext()
+  const { currentHands, gameState, calculateHand } = useBlackjackContext()
   const { isGameOver, isPlayerTurn } = gameState
 
   const displayHand = currentHands?.dealer?.map((card, index) => {
@@ -27,9 +27,12 @@ const Dealer2 = () => {
   })
 
   return (
-    <div className="pa3 br2 bg-light-red shadow-1">
-      <h2 className="f3 mb3 tc">Dealer's Hand</h2>
-      <div className="flex justify-center">{displayHand}</div>
+    <div>
+      <div className="pa3 br2 bg-light-red shadow-1">
+        <h2 className="f3 mb3 tc">Dealer's Hand</h2>
+        <div className="flex justify-center">{displayHand}</div>
+      </div>
+      {gameState.isGameOver && <h1>{calculateHand(currentHands.dealer)}</h1>}
     </div>
   )
 }
