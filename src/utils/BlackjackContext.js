@@ -74,9 +74,21 @@ export const BlackjackProvider = ({ children }) => {
     setCurrentHands([])
     console.log('deal cards starting')
     console.log(currentHands)
+
     let tempPlayerHand = []
     let tempDealerHand = []
     let tempDeck = deck
+
+    playerList.map((player) => {
+      let result = getCard(tempDeck)
+      setCurrentHands((prev) => ({
+        ...prev,
+        [`player${player.index}`]: [
+          ...prev[`player${player.index}`],
+          result.card,
+        ],
+      }))
+    })
 
     for (let i = 0; i < 2; i++) {
       let result = getCard(tempDeck)
@@ -120,6 +132,13 @@ export const BlackjackProvider = ({ children }) => {
         isGameOver: true,
         gameOutcome: 'Gross A tie!',
       }))
+    }
+  }
+
+  const handleAITurn = () => {
+    let tempDeck = deck
+    for (let i = 0; i < playerList.length; i++) {
+      const { card, newDeck } = getCard(tempDeck)
     }
   }
 
@@ -235,6 +254,7 @@ export const BlackjackProvider = ({ children }) => {
         deck,
         currentHands,
         gameState,
+        playerList,
         deal,
         hit,
         createDecks,
