@@ -2,12 +2,13 @@ import { useState } from 'react'
 import Player2 from './components/Player2'
 import { useBlackjack } from './utils/useBlackjack'
 import Dealer2 from './components/Dealer2'
+import { useBlackjackContext } from './utils/BlackjackContext'
 
 const Game2 = () => {
   const { currentHands, total, gameState, createDecks, deal, hit, deck } =
-    useBlackjack()
+    useBlackjackContext()
 
-  const [deckNumber, setDeckNumber] = useState(0)
+  const [deckNumber, setDeckNumber] = useState(2)
 
   return (
     <div className="pa4 mw7 center">
@@ -56,39 +57,12 @@ const Game2 = () => {
         {/* Dealer's Hand */}
         <Dealer2 />
       </section>
-
-      {/* AI Players Section */}
-      <section className="flex justify-between items-start mt4">
-        {/* AI Player 1 */}
-        <div className="w-30 pa3 br2 bg-light-blue shadow-1">
-          <h2 className="f3 mb3 tc">AI Player 1</h2>
-          <div className="flex flex-wrap justify-center">
-            {currentHands?.ai1?.map((card, index) => (
-              <div
-                key={index}
-                className="w3 h4 ba b--black-10 br2 ma2 flex items-center justify-center bg-white"
-              >
-                {card}
-              </div>
-            ))}
-          </div>
+      {gameState.isGameOver && (
+        <div>
+          <h1>GAME OVER</h1>
+          <h1>{gameState.gameOutcome}</h1>
         </div>
-
-        {/* AI Player 2 */}
-        <div className="w-30 pa3 br2 bg-light-yellow shadow-1">
-          <h2 className="f3 mb3 tc">AI Player 2</h2>
-          <div className="flex flex-wrap justify-center">
-            {currentHands?.ai2?.map((card, index) => (
-              <div
-                key={index}
-                className="w3 h4 ba b--black-10 br2 ma2 flex items-center justify-center bg-white"
-              >
-                {card}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      )}
     </div>
   )
 }

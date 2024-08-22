@@ -1,49 +1,32 @@
+import { useBlackjackContext } from '../utils/BlackjackContext'
+import { calculateHand } from '../utils/blackjacklogic'
 import { useBlackjack } from '../utils/useBlackjack'
 import Card from './Card'
 
 const Player2 = () => {
-  const { currentHands, hit, gameState, deck } = useBlackjack()
+  const { currentHands, hit, gameState, deck, calculateHand } =
+    useBlackjackContext()
+
+  
+
+  const displayHand = currentHands.player0.map((card) => (
+    <Card key={card.id} card={card.card} suit={card.suit} />
+  ))
   return (
-    <div className="w-30 pa3 br2 bg-light-green shadow-1">
+    <div className="pa3 br2 bg-light-green shadow-1">
       <h2 className="f3 mb3 tc">Your Hand</h2>
-      <div className="flex flex-wrap justify-center">
-        {currentHands?.player?.map((card, index) => (
-          <div
-            key={index}
-            className="w3 h4 ba b--black-10 br2 ma2 flex items-center justify-center bg-white"
-          >
-            <Card card={card.card} suit={card.suit} />
-            <h1> card goes here</h1>
-          </div>
-        ))}
-      </div>
-      <button
-        onClick={() => hit('player0')}
-        className="mt3 w-100 pv2 ph3 bg-dark-green white br2 grow pointer"
-      >
-        Hit
-      </button>
+
+      <div className="flex justify-center">{displayHand}</div>
       <button
         onClick={() => {
-          console.log(deck)
+          hit('player0')
         }}
       >
-        Show Decks
+        HIT
       </button>
-      <button
-        onClick={() => {
-          console.log(currentHands)
-        }}
-      >
-        Show CurrentHands
-      </button>
-      <button
-        onClick={() => {
-          console.log(gameState)
-        }}
-      >
-        Show GameState
-      </button>
+      <button>STAY</button>
+      <button>SPLIT</button>
+      {/* {displayHand.length > 1 && <div>{calculateHand(displayHand)}</div>} */}
     </div>
   )
 }

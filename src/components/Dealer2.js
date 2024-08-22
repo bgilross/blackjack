@@ -1,49 +1,38 @@
 import { useBlackjack } from '../utils/useBlackjack'
 import Card from './Card'
 import CardBack from '../images/cards/CardBack.png'
+import { useBlackjackContext } from '../utils/BlackjackContext'
 
 const Dealer2 = () => {
-  const { currentHands, gameState, deck } = useBlackjack()
+  const { currentHands, gameState, deck, calculateHand } = useBlackjackContext()
   const { isGameOver, isPlayerTurn } = gameState
 
-  return (
-    <div className="w-30 pa3 br2 bg-light-red shadow-1">
-      <h2 className="f3 mb3 tc">Dealer's Hand</h2>
-      <div className="flex flex-wrap justify-center">
-        {currentHands?.dealer?.map((card, index) => (
-          <div
+  const displayHand = currentHands?.dealer?.map((card, index) => {
+    if (index != 1) {
+      return <Card key={card.id} card={card.card} suit={card.suit} />
+    } else {
+      if (!isGameOver && isPlayerTurn) {
+        return (
+          <img
             key={index}
-            className="w3 h4 ba b--black-10 br2 ma2 flex items-center justify-center bg-white"
-          >
-            {!isGameOver && isPlayerTurn ? (
-              <img src={CardBack} alt="card back" height="150" width="100" />
-            ) : (
-              <Card card={card.card} suit={card.suit} />
-            )}
-          </div>
-        ))}
-      </div>
-      <button
-        onClick={() => {
-          console.log(deck)
-        }}
-      >
-        Show Decks
-      </button>
-      <button
-        onClick={() => {
-          console.log(currentHands)
-        }}
-      >
-        Show CurrentHands
-      </button>
-      <button
-        onClick={() => {
-          console.log(gameState)
-        }}
-      >
-        Show GameState
-      </button>
+            src={CardBack}
+            alt="card back"
+            height="150"
+            width="100"
+          />
+        )
+      } else {
+        return <Card key={card.id} card={card.card} suit={card.suit} />
+      }
+    }
+  })
+
+  return (
+    <div className="pa3 br2 bg-light-red shadow-1">
+      <h2 className="f3 mb3 tc">Dealer's Hand</h2>
+      <div className="flex justify-center">{displayHand}</div>
+
+      {/* {displayHand.length > 0 && <h2>{calculateHand(displayHand)}</h2>} */}
     </div>
   )
 }
