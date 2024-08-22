@@ -84,7 +84,7 @@ export const BlackjackProvider = ({ children }) => {
 
   const handleCheckOutcome = () => {
     let playerScore = handTotals.player0
-    let dealerScore = handTotals.dealer
+    let dealerScore = calculateHand(currentHands.dealer)
 
     if (playerScore > dealerScore) {
       setGameState((prev) => ({
@@ -107,10 +107,12 @@ export const BlackjackProvider = ({ children }) => {
         gameOutcome: 'Gross A tie!',
       }))
     }
+    setHandTotals({ dealer: dealerScore, player0: playerScore })
   }
 
   const handleDealerTurn = () => {
     setGameState((prev) => ({ ...prev, isPlayerTurn: false }))
+    let tempDeck = deck
     let tempHand = currentHands.dealer
     let handValue = calculateHand(tempHand)
     // if (handValue < 17) {
@@ -118,8 +120,10 @@ export const BlackjackProvider = ({ children }) => {
     //   return
     // }
     while (handValue < 17) {
-      hit('dealer')
-      handValue = calculateHand(currentHands.dealer)
+      const { card, newDeck } = getCard(tempDeck) // Draw a card
+      tempHand.push(card) // Add the card to the dealer's hand
+      tempDeck = newDeck // Update the deck
+      handValue = calculateHand(tempHand) // Recalculate the dealer's hand value
       console.log('end of while loop, handvalue: ', handValue)
     }
     if (handValue > 21) {
@@ -128,6 +132,8 @@ export const BlackjackProvider = ({ children }) => {
         isGameOver: true,
         gameOutcome: 'Dealer BUSTS. Player WINS!',
       }))
+
+      setHandTotals((prev) => ({ ...prev, dealer: handValue }))
       return
     }
 
@@ -135,13 +141,13 @@ export const BlackjackProvider = ({ children }) => {
   }
 
   const hit = (player) => {
+    console.log('deck at start of hit: ', deck)
     let tempHand = currentHands[player]
     let tempDeck = deck
     let handValue
     const { card, newDeck } = getCard(tempDeck)
     // setCurrentHands((prev) => ({ ...prev, [player]: [...prev[player], card] }))
     tempHand.push(card)
-    setDeck(newDeck)
     handValue = calculateHand(tempHand)
     if (player != 'dealer') {
       if (handValue > 21) {
@@ -154,6 +160,7 @@ export const BlackjackProvider = ({ children }) => {
     }
     setCurrentHands((prev) => ({ ...prev, [player]: tempHand }))
     setHandTotals((prev) => ({ ...prev, [player]: handValue }))
+    setDeck(newDeck)
   }
 
   const calculateHand = (hand) => {
