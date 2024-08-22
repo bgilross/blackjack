@@ -5,8 +5,16 @@ import Dealer2 from './components/Dealer2'
 import { useBlackjackContext } from './utils/BlackjackContext'
 
 const Game2 = () => {
-  const { currentHands, total, gameState, createDecks, deal, hit, deck } =
-    useBlackjackContext()
+  const {
+    currentHands,
+    handTotals,
+    total,
+    gameState,
+    createDecks,
+    deal,
+    hit,
+    deck,
+  } = useBlackjackContext()
 
   const [deckNumber, setDeckNumber] = useState(2)
 
@@ -32,7 +40,10 @@ const Game2 = () => {
       </section>
       <section className="flex justify-between items-start">
         {/* Player's Hand */}
-        <Player2 />
+        <div>
+          <Player2 />
+          <h1>{handTotals.player0}</h1>
+        </div>
         <button
           onClick={() => {
             console.log(deck)
@@ -55,7 +66,10 @@ const Game2 = () => {
           Show GameState
         </button>
         {/* Dealer's Hand */}
-        <Dealer2 />
+        <div>
+          <Dealer2 />
+          {/* <h1>{handTotals.dealer}</h1> */}
+        </div>
       </section>
       {gameState.isGameOver && (
         <div>
