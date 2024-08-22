@@ -69,6 +69,7 @@ const Game2 = () => {
         <div>
           <Dealer2 />
           {/* <h1>{handTotals.dealer}</h1> */}
+          {gameState.isGameOver && <h1>Score: {handTotals.dealer}</h1>}
         </div>
       </section>
       {gameState.isGameOver && (

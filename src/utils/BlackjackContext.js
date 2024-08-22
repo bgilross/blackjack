@@ -51,9 +51,11 @@ export const BlackjackProvider = ({ children }) => {
     setGameState((prev) => ({
       ...prev,
       isGameOver: false,
+      isPlayerTurn: true,
     }))
     setCurrentHands([])
     console.log('deal cards starting')
+    console.log(currentHands)
     let tempPlayerHand = []
     let tempDealerHand = []
     let tempDeck = deck
@@ -95,13 +97,14 @@ export const BlackjackProvider = ({ children }) => {
       setGameState((prev) => ({
         ...prev,
         isGameOver: true,
-        gameOutcome: 'Dealer beats Dealer!',
+        gameOutcome: 'Dealer beats Player!',
       }))
-    } else {
+    }
+    if (dealerScore === playerScore) {
       setGameState((prev) => ({
         ...prev,
         isGameOver: true,
-        gameOutcome: 'Player beats Dealer!',
+        gameOutcome: 'Gross A tie!',
       }))
     }
   }
@@ -110,7 +113,15 @@ export const BlackjackProvider = ({ children }) => {
     setGameState((prev) => ({ ...prev, isPlayerTurn: false }))
     let tempHand = currentHands.dealer
     let handValue = calculateHand(tempHand)
-
+    // if (handValue < 17) {
+    //   hit('dealer')
+    //   return
+    // }
+    while (handValue < 17) {
+      hit('dealer')
+      handValue = calculateHand(currentHands.dealer)
+      console.log('end of while loop, handvalue: ', handValue)
+    }
     if (handValue > 21) {
       setGameState((prev) => ({
         ...prev,
@@ -119,10 +130,7 @@ export const BlackjackProvider = ({ children }) => {
       }))
       return
     }
-    if (handValue < 17) {
-      hit('dealer')
-      return
-    }
+
     handleCheckOutcome()
   }
 
@@ -134,8 +142,8 @@ export const BlackjackProvider = ({ children }) => {
     // setCurrentHands((prev) => ({ ...prev, [player]: [...prev[player], card] }))
     tempHand.push(card)
     setDeck(newDeck)
+    handValue = calculateHand(tempHand)
     if (player != 'dealer') {
-      handValue = calculateHand(tempHand)
       if (handValue > 21) {
         setGameState((prev) => ({
           ...prev,

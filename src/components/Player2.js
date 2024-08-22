@@ -1,17 +1,9 @@
 import { useBlackjackContext } from '../utils/BlackjackContext'
-import { calculateHand } from '../utils/blackjacklogic'
-import { useBlackjack } from '../utils/useBlackjack'
 import Card from './Card'
 
 const Player2 = () => {
-  const {
-    currentHands,
-    hit,
-    handleDealerTurn,
-    gameState,
-    deck,
-    calculateHand,
-  } = useBlackjackContext()
+  const { currentHands, hit, handleDealerTurn, calculateHand } =
+    useBlackjackContext()
 
   const displayHand = currentHands.player0.map((card) => (
     <Card key={card.id} card={card.card} suit={card.suit} />
@@ -36,7 +28,7 @@ const Player2 = () => {
         STAY
       </button>
       <button>SPLIT</button>
-      {displayHand.length > 1 && <div>{calculateHand(displayHand)}</div>}
+      <div>{calculateHand(displayHand)}</div>
     </div>
   )
 }

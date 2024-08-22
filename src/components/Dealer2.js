@@ -1,10 +1,9 @@
-import { useBlackjack } from '../utils/useBlackjack'
 import Card from './Card'
 import CardBack from '../images/cards/CardBack.png'
 import { useBlackjackContext } from '../utils/BlackjackContext'
 
 const Dealer2 = () => {
-  const { currentHands, gameState, deck, calculateHand } = useBlackjackContext()
+  const { currentHands, gameState } = useBlackjackContext()
   const { isGameOver, isPlayerTurn } = gameState
 
   const displayHand = currentHands?.dealer?.map((card, index) => {
