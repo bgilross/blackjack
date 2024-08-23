@@ -3,6 +3,7 @@ import Player2 from './components/Player2'
 import Dealer2 from './components/Dealer2'
 import { useBlackjackContext } from './utils/BlackjackContext'
 import NumberInput from './components/NumberInput'
+import AIPlayer from './components/AIPlayer'
 
 const Game2 = () => {
   const {
@@ -16,7 +17,23 @@ const Game2 = () => {
   } = useBlackjackContext()
 
   const [deckNumber, setDeckNumber] = useState(2)
-  const [playerCount, setPlayerCount] = useState(1)
+  const [playerCount, setPlayerCount] = useState(4)
+
+  const renderAIPlayerComponents = () => {
+    if (!currentHands) {
+      return
+    }
+
+    const players = []
+    for (let i = 0; i < playerCount; i++) {
+      players.push(`player${i}`)
+    }
+    // const playerKeys = Object.keys(currentHands).filter((key) =>
+    //   key.match(/^player\d+$/)
+    // )
+
+    return players.map((player) => <AIPlayer key={player} name={player} />)
+  }
 
   return (
     <div className="pa4 mw7 center">
@@ -37,7 +54,8 @@ const Game2 = () => {
         </button>
         <button onClick={() => deal(playerCount)}>Deal</button>
       </section>
-      <section>
+      <section className="flex justify-center items-center">
+        <h3>AI Players</h3>
         <NumberInput
           value={playerCount}
           onChange={(e) => setPlayerCount(Number(e.target.value))}
@@ -60,6 +78,7 @@ const Game2 = () => {
           <h1>{gameState.gameOutcome}</h1>
         </div>
       )}
+      <section>{renderAIPlayerComponents()}</section>
     </div>
   )
 }

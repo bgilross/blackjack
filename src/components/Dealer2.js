@@ -32,7 +32,9 @@ const Dealer2 = () => {
         <h2 className="f3 mb3 tc">Dealer's Hand</h2>
         <div className="flex justify-center">{displayHand}</div>
       </div>
-      {gameState.isGameOver && <h1>{calculateHand(currentHands.dealer)}</h1>}
+      {gameState.isGameOver && currentHands.dealer && (
+        <h1>{calculateHand(currentHands.dealer)}</h1>
+      )}
     </div>
   )
 }

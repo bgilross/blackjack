@@ -5,7 +5,7 @@ const Player2 = () => {
   const { currentHands, hit, handleDealerTurn, calculateHand } =
     useBlackjackContext()
 
-  const displayHand = currentHands.player0.map((card) => (
+  const displayHand = currentHands?.player?.map((card) => (
     <Card key={card.id} card={card.card} suit={card.suit} />
   ))
   return (
@@ -29,7 +29,7 @@ const Player2 = () => {
         </button>
         <button>SPLIT</button>
       </div>
-      <h1>{calculateHand(currentHands.player0)}</h1>
+      {currentHands.player && <h1>{calculateHand(currentHands.player)}</h1>}
     </div>
   )
 }

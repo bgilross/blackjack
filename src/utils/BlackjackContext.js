@@ -25,7 +25,6 @@ export const BlackjackProvider = ({ children }) => {
     for (let i = 0; i < num; i++) {
       newPlayers.push(i)
     }
-
     newPlayers.map(
       (player, i) =>
         (newPlayers[i] = {
@@ -34,8 +33,6 @@ export const BlackjackProvider = ({ children }) => {
           hadTurn: false,
         })
     )
-
-    console.log('create players ending: newPlayers: ', newPlayers)
     setPlayerlist(newPlayers)
   }
 
@@ -55,6 +52,10 @@ export const BlackjackProvider = ({ children }) => {
     }
     setDeck(newDecks)
   }
+  //what if this controlled more... like the whole deck as a regular variable instead of state?
+  //what else would have to access deck ever except the function giving out cards?
+  //eventually if we wanted to track face cards left in stack and winning percentage other things would need access to deck
+  //even tracking cards left in deck
 
   const getCard = (tempDeck) => {
     const card = tempDeck[0]
@@ -65,6 +66,10 @@ export const BlackjackProvider = ({ children }) => {
   }
 
   const deal = (num) => {
+    console.log('Deal function Starting')
+    if (deck.length < 1) {
+      return
+    }
     createPlayers(num)
     setGameState((prev) => ({
       ...prev,
@@ -72,39 +77,42 @@ export const BlackjackProvider = ({ children }) => {
       isPlayerTurn: true,
     }))
     setCurrentHands([])
-    console.log('deal cards starting')
     console.log(currentHands)
-
-    let tempPlayerHand = []
-    let tempDealerHand = []
     let tempDeck = deck
+    let tempCurrentHands = {}
 
-    playerList.map((player) => {
-      let result = getCard(tempDeck)
-      setCurrentHands((prev) => ({
-        ...prev,
-        [`player${player.index}`]: [
-          ...prev[`player${player.index}`],
-          result.card,
-        ],
-      }))
-    })
-
-    for (let i = 0; i < 2; i++) {
-      let result = getCard(tempDeck)
-      tempPlayerHand.push(result.card)
-      tempDeck = result.newDeck
-
-      result = getCard(tempDeck)
-      tempDealerHand.push(result.card)
-      tempDeck = result.newDeck
+    for (let i = 0; i < num; i++) {
+      console.log('Player creation loop starting')
+      tempCurrentHands[`player${i}`] = []
     }
+    tempCurrentHands.player = []
+    tempCurrentHands.dealer = []
 
-    setCurrentHands((prev) => ({
-      ...prev,
-      dealer: tempDealerHand,
-      player0: tempPlayerHand,
-    }))
+    console.log(tempCurrentHands)
+    console.log('After player creationg, before Dealing loop')
+
+    //DEAL CARDS TWICE
+    for (let i = 0; i < 2; i++) {
+      //deal player
+      let result = getCard(tempDeck)
+      tempCurrentHands.player.push(result.card)
+      tempDeck = result.newDeck
+      //deal AI
+      for (let i = 0; i < num; i++) {
+        result = getCard(tempDeck)
+        tempCurrentHands[`player${i}`].push(result.card)
+        tempDeck = result.newDeck
+      }
+      //deal dealer
+      result = getCard(tempDeck)
+      tempCurrentHands.dealer.push(result.card)
+      tempDeck = result.newDeck
+
+      //and repeat
+    }
+    console.log('deal loop over tempCurrentHands: ', tempCurrentHands)
+
+    setCurrentHands(tempCurrentHands)
     setDeck(tempDeck)
   }
 
