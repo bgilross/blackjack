@@ -1,10 +1,13 @@
 import './App.css'
-import Game from './Game'
+import Game2 from './Game2'
+import { BlackjackProvider } from './utils/BlackjackContext'
 
 function App() {
   return (
     <div className="App">
-      <Game />
+      <BlackjackProvider>
+        <Game2 />
+      </BlackjackProvider>
     </div>
   )
 }
