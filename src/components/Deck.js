@@ -1,23 +1,29 @@
-const Deck = ({
-  deckNumber,
-  handleDeckNumberChange,
-  handleCreateDecks,
-  handleDealCards,
-}) => {
+import { useState } from 'react'
+import { useBlackjackContext } from '../utils/BlackjackContext'
+import NumberInput from './NumberInput'
+
+const Deck = () => {
+  const { createDecks, deal } = useBlackjackContext()
+  const [deckNumber, setDeckNumber] = useState(2)
+  const [playerCount, setPlayerCount] = useState(4)
+
   return (
     <div>
       <div className="w-100">
         <label htmlFor="deckNumber">Deck Number</label>
-        <input
-          type="number"
+        <NumberInput
           value={deckNumber}
-          onChange={handleDeckNumberChange}
-          name="deckNumber"
-          id="deckNumber"
+          onChange={(e) => setDeckNumber(Number(e.target.value))}
         />
-        <button onClick={handleCreateDecks}>Create Decks</button>
+        <button onClick={() => createDecks(deckNumber, playerCount)}>
+          Create Decks
+        </button>
       </div>
-      <button onClick={handleDealCards}>DEAL</button>
+      <NumberInput
+        value={playerCount}
+        onChange={(e) => setPlayerCount(Number(e.target.value))}
+      />
+      <button onClick={() => deal(playerCount)}>DEAL</button>
     </div>
   )
 }

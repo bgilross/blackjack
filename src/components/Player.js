@@ -15,7 +15,7 @@ const Player = () => {
         <div className="flex justify-center">{displayHand}</div>
         <button
           onClick={() => {
-            hit('player0')
+            hit('player')
           }}
         >
           HIT
