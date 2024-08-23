@@ -2,8 +2,7 @@ import { useBlackjackContext } from '../utils/BlackjackContext'
 import Card from './Card'
 
 const AIPlayer = ({ name }) => {
-  const { currentHands, hit, handleDealerTurn, calculateHand, playerList } =
-    useBlackjackContext()
+  const { currentHands, calculateHand } = useBlackjackContext()
 
   const displayHand = currentHands[name]?.map((card) => (
     <Card key={card.id} card={card.card} suit={card.suit} />

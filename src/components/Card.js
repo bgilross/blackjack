@@ -1,15 +1,14 @@
 import React from 'react'
-import cards from '../images/cards' // Import the cards object
+import cards from '../images/cards'
 
 const Card = ({ card, suit }) => {
-  // Construct the key used to access the correct image
-  const cardKey = `${card}${suit}` // e.g., '2C' for 2 of Clubs, 'AS' for Ace of Spades
+  const cardKey = `${card}${suit}`
 
   return (
     <img
       src={cards[cardKey]}
       alt={`${card} of ${suit}`}
-      style={{ width: '100px', height: '150px' }} // Customize the size as needed
+      style={{ width: '100px', height: '150px' }}
     />
   )
 }

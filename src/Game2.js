@@ -1,20 +1,12 @@
 import { useState } from 'react'
-import Player2 from './components/Player2'
-import Dealer2 from './components/Dealer2'
+import Player from './components/Player'
+import Dealer from './components/Dealer'
 import { useBlackjackContext } from './utils/BlackjackContext'
 import NumberInput from './components/NumberInput'
 import AIPlayer from './components/AIPlayer'
 
 const Game2 = () => {
-  const {
-    currentHands,
-    gameState,
-    createDecks,
-    deal,
-    hit,
-    deck,
-    calculateHand,
-  } = useBlackjackContext()
+  const { currentHands, gameState, createDecks, deal } = useBlackjackContext()
 
   const [deckNumber, setDeckNumber] = useState(2)
   const [playerCount, setPlayerCount] = useState(4)
@@ -23,15 +15,10 @@ const Game2 = () => {
     if (!currentHands) {
       return
     }
-
     const players = []
     for (let i = 0; i < playerCount; i++) {
       players.push(`player${i}`)
     }
-    // const playerKeys = Object.keys(currentHands).filter((key) =>
-    //   key.match(/^player\d+$/)
-    // )
-
     return players.map((player) => <AIPlayer key={player} name={player} />)
   }
 
@@ -62,14 +49,11 @@ const Game2 = () => {
         />
       </section>
       <section className="flex justify-between items-start">
-        {/* Player's Hand */}
         <div>
-          <Player2 />
+          <Player />
         </div>
-
-        {/* Dealer's Hand */}
         <div>
-          <Dealer2 />
+          <Dealer />
         </div>
       </section>
       {gameState.isGameOver && (
