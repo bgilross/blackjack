@@ -2,7 +2,7 @@ import { useBlackjackContext } from '../utils/BlackjackContext'
 import Card from './Card'
 
 const Player2 = () => {
-  const { currentHands, hit, handleDealerTurn, calculateHand } =
+  const { currentHands, hit, handleDealerTurn, handleAITurn, calculateHand } =
     useBlackjackContext()
 
   const displayHand = currentHands?.player?.map((card) => (
@@ -22,6 +22,7 @@ const Player2 = () => {
         </button>
         <button
           onClick={() => {
+            handleAITurn()
             handleDealerTurn()
           }}
         >

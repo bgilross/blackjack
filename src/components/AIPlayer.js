@@ -5,7 +5,7 @@ const AIPlayer = ({ name }) => {
   const { currentHands, hit, handleDealerTurn, calculateHand, playerList } =
     useBlackjackContext()
 
-  const displayHand = currentHands[name].map((card) => (
+  const displayHand = currentHands[name]?.map((card) => (
     <Card key={card.id} card={card.card} suit={card.suit} />
   ))
   return (

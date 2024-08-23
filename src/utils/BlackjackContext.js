@@ -9,7 +9,7 @@ export const BlackjackProvider = ({ children }) => {
   const [deck, setDeck] = useState([])
   const [currentHands, setCurrentHands] = useState({
     dealer: [],
-    player0: [],
+    player: [],
   })
   const [gameState, setGameState] = useState({
     isGameOver: false,
@@ -144,13 +144,38 @@ export const BlackjackProvider = ({ children }) => {
   }
 
   const handleAITurn = () => {
+    console.log('AI turn starting playerList.length = ', playerList.length)
     let tempDeck = deck
+    let tempHands = currentHands
+
     for (let i = 0; i < playerList.length; i++) {
-      const { card, newDeck } = getCard(tempDeck)
+      let playerHand = tempHands[`player${i}`]
+      let value = calculateHand(playerHand)
+      while (value < 17) {
+        console.log(`AI Player${i} HITS`)
+        const { card, newDeck } = getCard(tempDeck)
+        playerHand.push(card)
+        tempDeck = newDeck
+        value = calculateHand(playerHand)
+      }
+      if (value === 17) {
+        console.log(`AI Player${i} holding at 17`)
+        continue
+      }
+      if (value > 21) {
+        console.log(`AI Player${i} BUSTS`)
+        continue
+      }
+      console.log(`player${i} is still alive!`)
     }
+    console.log('Handle AI turn end: setting currentHands to: ', tempHands)
+    setCurrentHands(tempHands)
+    setDeck(tempDeck)
+    handleDealerTurn()
   }
 
   const handleDealerTurn = () => {
+    console.log('dealer turn starting')
     setGameState((prev) => ({ ...prev, isPlayerTurn: false }))
     let tempDeck = deck
     let tempHand = currentHands.dealer
@@ -268,6 +293,7 @@ export const BlackjackProvider = ({ children }) => {
         createDecks,
         calculateHand,
         handleDealerTurn,
+        handleAITurn,
       }}
     >
       {children}
