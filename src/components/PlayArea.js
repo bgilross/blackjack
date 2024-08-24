@@ -16,20 +16,40 @@ const PlayArea = () => {
 
   return (
     <div>
-      <section className="flex justify-between items-start">
-        <Player />
-        <Dealer />
+      {/* Player and Dealer in a horizontal flexbox */}
+      <section className="flex flex-wrap pa4">
+        <div className="w-50 pa2">
+          <Player />
+        </div>
+        <div className="w-50 pa2">
+          <Dealer />
+        </div>
       </section>
+
       {gameState.isGameOver && (
-        <div>
+        <div className="tc mt4">
           <h1>GAME OVER</h1>
           <h1>{gameState.gameOutcome}</h1>
         </div>
       )}
-      <section className="flex justify-between items-start flex-wrap">
-        {renderAIPlayerComponents()}
+
+      {/* AI Players in a responsive grid layout using only Tachyons */}
+      <section
+        className="pa4"
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+          gap: '1rem',
+        }}
+      >
+        {renderAIPlayerComponents().map((AIPlayerComponent, index) => (
+          <div key={index} className="pa2">
+            {AIPlayerComponent}
+          </div>
+        ))}
       </section>
     </div>
   )
 }
+
 export default PlayArea
