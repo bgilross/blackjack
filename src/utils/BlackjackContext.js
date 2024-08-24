@@ -52,10 +52,6 @@ export const BlackjackProvider = ({ children }) => {
     }
     setDeck(newDecks)
   }
-  //what if this controlled more... like the whole deck as a regular variable instead of state?
-  //what else would have to access deck ever except the function giving out cards?
-  //eventually if we wanted to track face cards left in stack and winning percentage other things would need access to deck
-  //even tracking cards left in deck
 
   const getCard = (tempDeck) => {
     const card = tempDeck[0]
@@ -76,7 +72,7 @@ export const BlackjackProvider = ({ children }) => {
       isGameOver: false,
       isPlayerTurn: true,
     }))
-    setCurrentHands([])
+    setCurrentHands({})
     console.log(currentHands)
     let tempDeck = deck
     let tempCurrentHands = {}
@@ -164,6 +160,7 @@ export const BlackjackProvider = ({ children }) => {
       }
       if (value > 21) {
         console.log(`AI Player${i} BUSTS`)
+        tempHands[`player${i}`].isBusted = true
         continue
       }
       console.log(`player${i} is still alive!`)
