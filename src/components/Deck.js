@@ -3,7 +3,7 @@ import { useBlackjackContext } from '../utils/BlackjackContext'
 import NumberInput from './NumberInput'
 
 const Deck = () => {
-  const { createDecks, deal } = useBlackjackContext()
+  const { handleCreateDecks, deal } = useBlackjackContext()
   const [deckNumber, setDeckNumber] = useState(2)
   const [playerCount, setPlayerCount] = useState(4)
 
@@ -15,7 +15,7 @@ const Deck = () => {
           value={deckNumber}
           onChange={(e) => setDeckNumber(Number(e.target.value))}
         />
-        <button onClick={() => createDecks(deckNumber, playerCount)}>
+        <button onClick={() => handleCreateDecks(deckNumber)}>
           Create Decks
         </button>
       </div>
