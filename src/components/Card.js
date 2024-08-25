@@ -5,11 +5,13 @@ const Card = ({ card, suit }) => {
   const cardKey = `${card}${suit}`
 
   return (
-    <img
-      src={cards[cardKey]}
-      alt={`${card} of ${suit}`}
-      style={{ width: '100px', height: '150px' }}
-    />
+    <div>
+      <img
+        src={cards[cardKey]}
+        alt={`${card} of ${suit}`}
+        style={{ width: '10rem', height: '15rem' }}
+      />
+    </div>
   )
 }
 

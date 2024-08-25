@@ -2,6 +2,7 @@ import Player from './Player'
 import Dealer from './Dealer'
 import AIPlayer from './AIPlayer'
 import { useBlackjackContext } from '../utils/BlackjackContext'
+import Deck from './Deck'
 
 const PlayArea2 = () => {
   const { playerList, gameState } = useBlackjackContext()
@@ -19,7 +20,7 @@ const PlayArea2 = () => {
       {/* Player and Dealer in a horizontal flexbox */}
       <section className="flex justify-center items-center justify-around pa4">
         <Dealer />
-
+        <Deck />
         <Player />
       </section>
       {gameState.isGameOver && (
@@ -29,15 +30,16 @@ const PlayArea2 = () => {
         </div>
       )}
       <div
-        style={{
-          display: 'flex',
-          flexWrap: 'wrap',
-          justifyContent: 'center',
-          gap: '1rem',
-        }}
+        className="flex flex-wrap justify-center pa3"
+        // style={{
+        //   display: 'flex',
+        //   flexWrap: 'wrap',
+        //   justifyContent: 'center',
+        //   gap: '1rem',
+        // }}
       >
         {renderAIPlayerComponents().map((AIPlayerComponent, index) => (
-          <div key={index} style={{ flex: '1 1 200px' }} className="pa2">
+          <div key={index} className="pa2">
             {AIPlayerComponent}
           </div>
         ))}
