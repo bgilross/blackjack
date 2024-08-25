@@ -5,9 +5,11 @@ let deck = []
 export const createDecks = (num) => {
   deck = []
   for (let i = num; i > 0; i--) {
-    deck.push(createDeck)
+    deck = createDeck()
+    deck.push(...deck)
   }
   shuffleDeck()
+  console.log('create decks and shuffle done: deck: ', deck)
 }
 
 const createDeck = () => {
@@ -43,11 +45,15 @@ const createDeck = () => {
       }
     })
   )
+  console.log('create deck done, new deck = ', newDeck)
   return newDeck
 }
 
 export const getCard = () => {
+  console.log('getting card: deck is: ', deck)
+
   const card = deck[0]
+  console.log('card is: ', card)
   deck = deck.slice(1)
   return card
 }
