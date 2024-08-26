@@ -1,6 +1,6 @@
 {
   "name": "blackjack",
-  "homepage": "https://bgilross.github.io/blackjack/public",
+  "homepage": "https://bgilross.github.io/blackjack/build",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
