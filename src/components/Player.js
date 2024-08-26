@@ -23,8 +23,8 @@ const Player = () => {
               HIT
             </button>
             <button
-              onClick={() => {
-                handleAITurn()
+              onClick={async () => {
+                await handleAITurn()
                 handleDealerTurn()
               }}
             >

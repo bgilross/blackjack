@@ -19,6 +19,8 @@ export const BlackjackProvider = ({ children }) => {
   })
   const [playerList, setPlayerlist] = useState([])
 
+  const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
+
   const createPlayers = (num) => {
     let newPlayers = []
     for (let i = 0; i < num; i++) {
@@ -101,7 +103,6 @@ export const BlackjackProvider = ({ children }) => {
 
   const handleAITurn = async () => {
     let tempHands = currentHands
-    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
     for (let i = 0; i < playerList.length; i++) {
       await delay(1000)
       let playerHand = tempHands[`player${i}`]
@@ -113,6 +114,7 @@ export const BlackjackProvider = ({ children }) => {
         console.log('playerHand: ', playerHand)
         console.log('tempHands.player?: ', tempHands[`player${i}`])
         value = calculateHand(playerHand)
+        setCurrentHands(tempHands)
       }
       if (value === 17) {
         console.log(`AI Player${i} holding at 17`)
@@ -129,14 +131,16 @@ export const BlackjackProvider = ({ children }) => {
     handleDealerTurn()
   }
 
-  const handleDealerTurn = () => {
+  const handleDealerTurn = async () => {
     setGameState((prev) => ({ ...prev, isPlayerTurn: false }))
 
     let tempHand = currentHands.dealer
     let handValue = calculateHand(tempHand)
+    await delay(1000)
 
     while (handValue < 17) {
       tempHand.push(getCard())
+      await delay(1000)
       handValue = calculateHand(tempHand)
       console.log('end of while loop, handvalue: ', handValue)
     }
