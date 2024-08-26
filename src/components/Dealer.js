@@ -1,5 +1,6 @@
 import Card from './Card'
 import CardBack from '../images/cards/CardBack.png'
+import cardBack from '../images/cardBack.png'
 import { useBlackjackContext } from '../utils/BlackjackContext'
 
 const Dealer = () => {
@@ -13,11 +14,11 @@ const Dealer = () => {
       if (!isGameOver && isPlayerTurn) {
         return (
           <img
+            className="br3"
             key={index}
             src={CardBack}
             alt="card back"
-            height="150"
-            width="100"
+            style={{ width: '10rem', height: '15rem' }}
           />
         )
       } else {

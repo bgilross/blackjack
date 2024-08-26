@@ -1,12 +1,12 @@
 import { createContext, useContext, useState } from 'react'
 import uniqid from 'uniqid'
+import { createDecks, getCard } from './deckUtil'
 
 const BlackjackContext = createContext()
 
 export const useBlackjackContext = () => useContext(BlackjackContext)
 
 export const BlackjackProvider = ({ children }) => {
-  const [deck, setDeck] = useState([])
   const [currentHands, setCurrentHands] = useState({
     dealer: [],
     player: [],
@@ -36,49 +36,18 @@ export const BlackjackProvider = ({ children }) => {
     setPlayerlist(newPlayers)
   }
 
-  const createDecks = (deckNum) => {
-    let newDecks = []
-    for (let i = 0; i < deckNum; i++) {
-      const newDeck = createDeck()
-      newDecks.push(...newDeck)
-    }
-    for (let i = 7; i > 0; i--) {
-      for (let i = newDecks.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1))
-        const temp = newDecks[i]
-        newDecks[i] = newDecks[j]
-        newDecks[j] = temp
-      }
-    }
-    setDeck(newDecks)
-  }
-  //what if this controlled more... like the whole deck as a regular variable instead of state?
-  //what else would have to access deck ever except the function giving out cards?
-  //eventually if we wanted to track face cards left in stack and winning percentage other things would need access to deck
-  //even tracking cards left in deck
-
-  const getCard = (tempDeck) => {
-    const card = tempDeck[0]
-    console.log(`card at index 0 is ${JSON.stringify(card)}`)
-    const newDeck = tempDeck.slice(1)
-    console.log(`newDeck after slice: ${newDeck.length} cards`)
-    return { card, newDeck }
+  const handleCreateDecks = (num) => {
+    createDecks(num)
   }
 
   const deal = (num) => {
-    console.log('Deal function Starting')
-    if (deck.length < 1) {
-      return
-    }
     createPlayers(num)
     setGameState((prev) => ({
       ...prev,
       isGameOver: false,
       isPlayerTurn: true,
     }))
-    setCurrentHands([])
-    console.log(currentHands)
-    let tempDeck = deck
+    setCurrentHands({})
     let tempCurrentHands = {}
 
     for (let i = 0; i < num; i++) {
@@ -88,32 +57,20 @@ export const BlackjackProvider = ({ children }) => {
     tempCurrentHands.player = []
     tempCurrentHands.dealer = []
 
-    console.log(tempCurrentHands)
-    console.log('After player creationg, before Dealing loop')
-
     //DEAL CARDS TWICE
     for (let i = 0; i < 2; i++) {
       //deal player
-      let result = getCard(tempDeck)
-      tempCurrentHands.player.push(result.card)
-      tempDeck = result.newDeck
+      tempCurrentHands.player.push(getCard())
       //deal AI
       for (let i = 0; i < num; i++) {
-        result = getCard(tempDeck)
-        tempCurrentHands[`player${i}`].push(result.card)
-        tempDeck = result.newDeck
+        tempCurrentHands[`player${i}`].push(getCard())
       }
       //deal dealer
-      result = getCard(tempDeck)
-      tempCurrentHands.dealer.push(result.card)
-      tempDeck = result.newDeck
-
-      //and repeat
+      tempCurrentHands.dealer.push(getCard())
+      //and repeat once
     }
-    console.log('deal loop over tempCurrentHands: ', tempCurrentHands)
 
     setCurrentHands(tempCurrentHands)
-    setDeck(tempDeck)
   }
 
   const handleCheckOutcome = () => {
@@ -143,19 +100,17 @@ export const BlackjackProvider = ({ children }) => {
     }
   }
 
-  const handleAITurn = () => {
-    console.log('AI turn starting playerList.length = ', playerList.length)
-    let tempDeck = deck
+  const handleAITurn = async () => {
     let tempHands = currentHands
-
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms))
     for (let i = 0; i < playerList.length; i++) {
+      await delay(1000)
       let playerHand = tempHands[`player${i}`]
       let value = calculateHand(playerHand)
       while (value < 17) {
         console.log(`AI Player${i} HITS`)
-        const { card, newDeck } = getCard(tempDeck)
-        playerHand.push(card)
-        tempDeck = newDeck
+        await delay(1000)
+        playerHand.push(getCard())
         value = calculateHand(playerHand)
       }
       if (value === 17) {
@@ -164,27 +119,23 @@ export const BlackjackProvider = ({ children }) => {
       }
       if (value > 21) {
         console.log(`AI Player${i} BUSTS`)
+        tempHands[`player${i}`].isBusted = true
         continue
       }
       console.log(`player${i} is still alive!`)
     }
-    console.log('Handle AI turn end: setting currentHands to: ', tempHands)
     setCurrentHands(tempHands)
-    setDeck(tempDeck)
     handleDealerTurn()
   }
 
   const handleDealerTurn = () => {
-    console.log('dealer turn starting')
     setGameState((prev) => ({ ...prev, isPlayerTurn: false }))
-    let tempDeck = deck
+
     let tempHand = currentHands.dealer
     let handValue = calculateHand(tempHand)
 
     while (handValue < 17) {
-      const { card, newDeck } = getCard(tempDeck)
-      tempHand.push(card)
-      tempDeck = newDeck
+      tempHand.push(getCard())
       handValue = calculateHand(tempHand)
       console.log('end of while loop, handvalue: ', handValue)
     }
@@ -202,12 +153,9 @@ export const BlackjackProvider = ({ children }) => {
   }
 
   const hit = (player) => {
-    console.log('deck at start of hit: ', deck)
     let tempHand = currentHands[player]
-    let tempDeck = deck
     let handValue
-    const { card, newDeck } = getCard(tempDeck)
-    tempHand.push(card)
+    tempHand.push(getCard())
     handValue = calculateHand(tempHand)
     if (player !== 'dealer') {
       if (handValue > 21) {
@@ -219,7 +167,6 @@ export const BlackjackProvider = ({ children }) => {
       }
     }
     setCurrentHands((prev) => ({ ...prev, [player]: tempHand }))
-    setDeck(newDeck)
   }
 
   const calculateHand = (hand) => {
@@ -243,57 +190,18 @@ export const BlackjackProvider = ({ children }) => {
     return value
   }
 
-  const createDeck = () => {
-    console.log('running createDeck')
-    const suits = ['H', 'S', 'D', 'C']
-    return suits.flatMap((suit) =>
-      Array.from({ length: 13 }, (_, i) => {
-        let number = i + 1
-        let card
-        if (number === 1) {
-          card = 'A'
-        } else if (number === 11) {
-          card = 'J'
-        } else if (number === 12) {
-          card = 'Q'
-        } else if (number === 13) {
-          card = 'K'
-        } else {
-          card = number.toString()
-        }
-
-        let value
-        if (number < 11) {
-          value = number
-        } else if (number < 14) {
-          value = 10
-        } else {
-          value = 11
-        }
-
-        return {
-          id: uniqid(),
-          card: card,
-          suit: suit,
-          value: value,
-        }
-      })
-    )
-  }
-
   return (
     <BlackjackContext.Provider
       value={{
-        deck,
         currentHands,
         gameState,
         playerList,
         deal,
         hit,
-        createDecks,
         calculateHand,
         handleDealerTurn,
         handleAITurn,
+        handleCreateDecks,
       }}
     >
       {children}
