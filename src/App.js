@@ -7,6 +7,7 @@ function App() {
     <div className="App">
       <BlackjackProvider>
         <div className="min-vh-100 max-vh-100 bg-dark-green pa1">
+          <h1>MAIN BRANCH</h1>
           <Header />
           <PlayArea />
         </div>
