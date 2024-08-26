@@ -1,6 +1,7 @@
 import { useBlackjackContext } from '../utils/BlackjackContext'
 import Card from './Card'
 import Busted from '../images/bust.png'
+// import Busted from '/images/bust.png'
 
 const AIPlayer = ({ name }) => {
   const { currentHands, calculateHand } = useBlackjackContext()

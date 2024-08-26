@@ -1,5 +1,4 @@
 import { createContext, useContext, useState } from 'react'
-import uniqid from 'uniqid'
 import { createDecks, getCard } from './deckUtil'
 
 const BlackjackContext = createContext()
@@ -111,6 +110,8 @@ export const BlackjackProvider = ({ children }) => {
         console.log(`AI Player${i} HITS`)
         await delay(1000)
         playerHand.push(getCard())
+        console.log('playerHand: ', playerHand)
+        console.log('tempHands.player?: ', tempHands[`player${i}`])
         value = calculateHand(playerHand)
       }
       if (value === 17) {
