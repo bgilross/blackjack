@@ -1,6 +1,5 @@
 import Card from './Card'
 import CardBack from '../images/cards/CardBack.png'
-import cardBack from '../images/cardBack.png'
 import { useBlackjackContext } from '../utils/BlackjackContext'
 
 const Dealer = () => {
