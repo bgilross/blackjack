@@ -29,7 +29,7 @@ const PlayArea = () => {
           <h1>{gameState.gameOutcome}</h1>
         </div>
       )}
-      <div className="flex flex-wrap justify-center pa3">
+      <div className="flex flex-row-reverse flex-wrap justify-center pa3">
         {renderAIPlayerComponents().map((AIPlayerComponent, index) => (
           <div key={index} className="pa2">
             {AIPlayerComponent}
