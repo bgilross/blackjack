@@ -1,12 +1,17 @@
+import { useBlackjackContext } from "../utils/BlackjackContext"
+
 const Header = () => {
-  return (
-    <header className="tc mb4">
-      <h1 className="f2 fw7 ttu tracked">Blackjack</h1>
-      <p className="f4 fw4">
-        Try to beat the dealer! Get as close to 21 as possible without going
-        over.
-      </p>
-    </header>
-  )
+	const { openSetup } = useBlackjackContext()
+	return (
+		<header className="flex items-center justify-between mb3">
+			<div>
+				<h1 className="f4 fw7 ttu">Blackjack</h1>
+				<p className="f6 mv0">Beat the dealer — get to 21 without busting.</p>
+			</div>
+			<div>
+				<button onClick={() => openSetup()}>New Game</button>
+			</div>
+		</header>
+	)
 }
 export default Header
