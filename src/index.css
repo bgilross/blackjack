@@ -241,3 +241,90 @@ body {
 	border-radius: 6px;
 	will-change: transform, opacity;
 }
+
+/* Overlap extra cards in a hand to save horizontal space.
+	 Applies to any container that has a data-hand attribute (player, dealer, player0, ...)
+	 The first two cards keep normal spacing; from the 3rd card onward they overlap to the left.
+*/
+[data-hand] {
+	display: flex;
+	align-items: center;
+}
+
+/* default spacing: keep first card flush, small gap for second when only two cards */
+[data-hand] .card-container:first-child {
+	margin-left: 0;
+	position: relative;
+}
+[data-hand] .card-container:nth-child(2) {
+	margin-left: 0.5rem;
+}
+
+/* If there are 3 or more cards, make all cards (2nd+) overlap the previous cards.
+	 Uses :has() to detect a third child; browsers that support :has will apply this.
+*/
+[data-hand]:has(.card-container:nth-child(3)) .card-container:nth-child(n + 2) {
+	margin-left: -3rem; /* overlap amount when 3+ cards */
+}
+
+/* Increase overlap for later cards so very large hands compress more */
+[data-hand] .card-container:nth-child(4) {
+	margin-left: -4rem;
+}
+[data-hand] .card-container:nth-child(5) {
+	margin-left: -5rem;
+}
+
+/* on narrow/tall cramped view, overlap more to keep things compact */
+@media (max-height: 700px) {
+	[data-hand]:has(.card-container:nth-child(3))
+		.card-container:nth-child(n + 2) {
+		margin-left: -4rem;
+	}
+	[data-hand] .card-container:nth-child(4) {
+		margin-left: -5rem;
+	}
+	[data-hand] .card-container:nth-child(5) {
+		margin-left: -6rem;
+	}
+}
+
+/* Increase overlap progressively as viewport width shrinks */
+@media (max-width: 1200px) {
+	[data-hand]:has(.card-container:nth-child(3))
+		.card-container:nth-child(n + 2) {
+		margin-left: -3.5rem;
+	}
+	[data-hand] .card-container:nth-child(4) {
+		margin-left: -4.5rem;
+	}
+	[data-hand] .card-container:nth-child(5) {
+		margin-left: -5.5rem;
+	}
+}
+
+@media (max-width: 1000px) {
+	[data-hand]:has(.card-container:nth-child(3))
+		.card-container:nth-child(n + 2) {
+		margin-left: -4rem;
+	}
+	[data-hand] .card-container:nth-child(4) {
+		margin-left: -5rem;
+	}
+	[data-hand] .card-container:nth-child(5) {
+		margin-left: -6rem;
+	}
+}
+
+@media (max-width: 800px) {
+	[data-hand]:has(.card-container:nth-child(3))
+		.card-container:nth-child(n + 2) {
+		margin-left: -4.5rem;
+	}
+	[data-hand] .card-container:nth-child(4) {
+		margin-left: -5.5rem;
+	}
+	[data-hand] .card-container:nth-child(5) {
+		margin-left: -6.5rem;
+	}
+}
